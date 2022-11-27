@@ -59,12 +59,12 @@ class UserService {
   }
 
   async getAllUsers() {
-    const users = await User.find()
+    const users = await User.find({}, '-password')
     return users
   }
 
   async getUserById(id) {
-    const candidate = await User.findById(id)
+    const candidate = await User.findById(id, '-password')
     if(!candidate) {
       throw ApiError.BadRequest('Пользователь с таким ID не найден')
     }
@@ -74,7 +74,7 @@ class UserService {
 
   async getMe(accessToken) {
     const userData = tokenService.validateAccessToken(accessToken)
-    const candidate = await User.findById(userData.id)
+    const candidate = await User.findById(userData.id, '-password')
     if(!candidate) {
       throw ApiError.BadRequest('Пользователь с таким ID не найден')
     }
@@ -83,7 +83,7 @@ class UserService {
   }
 
   async updateUser(id, data) {
-    const candidate = await User.findById(id)
+    const candidate = await User.findById(id, '-password')
     if(!candidate) {
       throw ApiError.BadRequest('Пользователь с таким ID не найден')
     }
